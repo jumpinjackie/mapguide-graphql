@@ -4,10 +4,11 @@ using GraphQL.Server.Ui.Playground;
 using GraphQL.Server.Ui.Voyager;
 using GraphQL.Types;
 using MgGraphQL.Controllers;
-using MgGraphQL.Model;
+using MgGraphQL.GraphModel;
+using MgGraphQL.GraphModel.Output;
+using MgGraphQL.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
@@ -48,7 +49,7 @@ namespace MgGraphQL
         public void ConfigureContainer(ContainerBuilder builder)
         {
             builder.RegisterType<DocumentExecuter>().As<IDocumentExecuter>();
-
+            builder.RegisterType<GraphQLQuery>().AsSelf();
             builder.RegisterType<GraphQLSchema>().As<ISchema>();
             builder.Register<Func<Type, GraphType>>(c =>
             {
@@ -68,11 +69,21 @@ namespace MgGraphQL
                 .InstancePerLifetimeScope();
 
             //Auto-wire all IGraphQLType implementations
-            var serviceAssembly = typeof(IGraphQLType).GetTypeInfo().Assembly;
-            builder.RegisterAssemblyTypes(serviceAssembly)
+            var graphTypesAssembly = typeof(IGraphQLType).GetTypeInfo().Assembly;
+            builder.RegisterAssemblyTypes(graphTypesAssembly)
                 .Where(t => t.GetInterfaces()
                     .Any(i => i.IsAssignableFrom(typeof(IGraphQLType))))
                 .AsSelf();
+
+            builder.RegisterGeneric(typeof(ResponseGraphType<>)).AsSelf();
+            builder.RegisterGeneric(typeof(ResponseListGraphType<>)).AsSelf();
+
+            //Auto-wire all service implementations
+            var serviceAssembly = typeof(ResourceService).Assembly;
+            builder.RegisterAssemblyTypes(serviceAssembly)
+                .Where(t => t.Name.EndsWith("Service"))
+                .AsImplementedInterfaces()
+                .InstancePerLifetimeScope();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

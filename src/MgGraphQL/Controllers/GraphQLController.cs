@@ -1,6 +1,6 @@
 ﻿using GraphQL;
 using GraphQL.Types;
-using MgGraphQL.Model;
+using MgGraphQL.GraphModel;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -9,7 +9,7 @@ namespace MgGraphQL.Controllers
     [Route(API_ENDPOINT)]
     public class GraphQLController : Controller
     {
-        public const string API_ENDPOINT = "api/graphsql";
+        public const string API_ENDPOINT = "api/graphql";
 
         private readonly GraphQLQuery _graphQLQuery;
         private readonly IDocumentExecuter _documentExecuter;
@@ -18,7 +18,7 @@ namespace MgGraphQL.Controllers
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="graphQLQuery">GraphQL for Bibliotheca query.</param>
+        /// <param name="graphQLQuery">GraphQL for MapGuide query.</param>
         /// <param name="documentExecuter">GraphQL document executor.</param>
         /// <param name="schema">GraphQL schema.</param>
         public GraphQLController(GraphQLQuery graphQLQuery, IDocumentExecuter documentExecuter, ISchema schema)

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace MgGraphQL.Model
+namespace MgGraphQL.GraphModel
 {
     public class GraphQLSchema : Schema
     {

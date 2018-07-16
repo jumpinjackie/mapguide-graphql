@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="GraphQL" Version="2.0.0-alpha-938" />
+    <PackageReference Include="OSGeo.MapGuide.ObjectModels" Version="6.0.0-pre248" />
+  </ItemGroup>
+
+</Project>
