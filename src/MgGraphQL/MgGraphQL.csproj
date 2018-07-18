@@ -15,18 +15,31 @@
     <PackageReference Include="GraphQL" Version="2.0.0-alpha-938" />
     <PackageReference Include="GraphQL.Server.Ui.Playground" Version="3.1.0-alpha0022" />
     <PackageReference Include="GraphQL.Server.Ui.Voyager" Version="3.1.0-alpha0022" />
+    <PackageReference Include="MapGuideDotNetApi" Version="3.1.1.9378-pre74" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="2.1.0" />
   </ItemGroup>
 
   <ItemGroup>
     <!-- Don't publish the SPA source files, but do show them in the project files list -->
+    <Compile Remove="Model\**" />
     <Content Remove="$(SpaRoot)**" />
+    <Content Remove="Model\**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Model\" />
+    <EmbeddedResource Remove="Model\**" />
+    <None Remove="Model\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="ClientApp\package.json" />
+    <Content Include="ClientApp\public\manifest.json" />
+    <Content Include="ClientApp\tsconfig.json" />
+    <Content Include="ClientApp\tsconfig.prod.json" />
+    <Content Include="ClientApp\tsconfig.test.json" />
+    <Content Include="ClientApp\tslint.json" />
   </ItemGroup>
 
   <ItemGroup>

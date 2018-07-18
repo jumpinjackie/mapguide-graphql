@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MapGuideDotNetApi" Version="3.1.1.9378-pre74" />
+    <PackageReference Include="OSGeo.MapGuide.ObjectModels" Version="6.0.0-pre248" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\MgGraphQL.GraphModel\MgGraphQL.GraphModel.csproj" />
   </ItemGroup>
 

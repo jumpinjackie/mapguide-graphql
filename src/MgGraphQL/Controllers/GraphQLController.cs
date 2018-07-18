@@ -37,6 +37,10 @@ namespace MgGraphQL.Controllers
         public async Task<IActionResult> Post([FromBody] GraphQLParameter query)
         {
             var executionOptions = new ExecutionOptions { Schema = _schema, Query = query.Query, UserContext = User };
+            if (query.Variables != null)
+            {
+                executionOptions.Inputs = query.Variables.ToInputs();
+            }
             var result = await _documentExecuter.ExecuteAsync(executionOptions).ConfigureAwait(false);
 
             if (result.Errors?.Count > 0)

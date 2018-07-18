@@ -13,17 +13,42 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using OSGeo.MapGuide;
 using System;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace MgGraphQL
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IHostingEnvironment env)
         {
-            Configuration = configuration;
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                builder.AddJsonFile("appsettings.windows.json");
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                builder.AddJsonFile("appsettings.linux.json");
+            }
+            else
+            {
+                throw new NotSupportedException("MapGuide doesn't work on this platform");
+            }
+
+            // Set up configuration sources.
+            builder.AddEnvironmentVariables();
+            Configuration = builder.Build();
+
+            string mgWebConfigPath = Configuration["MapGuide.WebConfigPath"];
+            MapGuideApi.MgInitializeWebTier(mgWebConfigPath);
         }
 
         public IConfiguration Configuration { get; }
@@ -50,6 +75,7 @@ namespace MgGraphQL
         {
             builder.RegisterType<DocumentExecuter>().As<IDocumentExecuter>();
             builder.RegisterType<GraphQLQuery>().AsSelf();
+            builder.RegisterType<GraphQLMutation>().AsSelf();
             builder.RegisterType<GraphQLSchema>().As<ISchema>();
             builder.Register<Func<Type, GraphType>>(c =>
             {
@@ -60,8 +86,8 @@ namespace MgGraphQL
                 };
             });
 
-            //Auto-wire all IResolver implementations
-            var resolverAssembly = typeof(IResolver).GetTypeInfo().Assembly;
+            //Auto-wire all resolver implementations
+            var resolverAssembly = typeof(IQueryResolver).GetTypeInfo().Assembly;
 
             builder.RegisterAssemblyTypes(resolverAssembly)
                 .Where(t => t.Name.EndsWith("Resolver"))
@@ -101,7 +127,7 @@ namespace MgGraphQL
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 

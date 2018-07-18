@@ -12,6 +12,7 @@ namespace MgGraphQL.GraphModel
             : base(resolveType)
         {
             Query = (GraphQLQuery)resolveType(typeof(GraphQLQuery));
+            Mutation = (GraphQLMutation)resolveType(typeof(GraphQLMutation));
         }
     }
 }

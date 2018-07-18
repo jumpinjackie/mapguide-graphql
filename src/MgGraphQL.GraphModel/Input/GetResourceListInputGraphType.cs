@@ -7,7 +7,9 @@ namespace MgGraphQL.GraphModel.Input
     {
         public GetResourceListInputGraphType()
         {
-            Field(i => i.ResourceId).Description("The resource id of the folder to get resources for");
+            this.DefineCommonOperationProperties();
+            Field(i => i.ResourceId, nullable: true).Description("The resource id of the folder to get resources for");
+            Field(i => i.Path, nullable: true).Description("The path of the folder to get resources for. This is an alternative to ResourceId");
         }
     }
 }

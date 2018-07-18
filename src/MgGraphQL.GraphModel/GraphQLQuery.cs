@@ -8,7 +8,7 @@ namespace MgGraphQL.GraphModel
 {
     public class GraphQLQuery : ObjectGraphType
     {
-        public GraphQLQuery(IEnumerable<IResolver> resolvers)
+        public GraphQLQuery(IEnumerable<IQueryResolver> resolvers)
         {
             foreach (var resolver in resolvers)
             {

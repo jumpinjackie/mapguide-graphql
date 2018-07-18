@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace MgGraphQL.GraphModel
 {
-    public interface IResolver
+    public interface IQueryResolver
     {
         void Resolve(GraphQLQuery graphQLQuery);
     }

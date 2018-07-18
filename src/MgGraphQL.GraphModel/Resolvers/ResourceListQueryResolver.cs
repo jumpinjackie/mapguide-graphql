@@ -6,11 +6,11 @@ using MgGraphQL.GraphModel.Services;
 
 namespace MgGraphQL.GraphModel.Resolvers
 {
-    public class ResourceListResolver : ResolverBase, IResolver
+    public class ResourceListQueryResolver : ResolverBase, IQueryResolver
     {
         readonly IResourceService _resSvc;
 
-        public ResourceListResolver(IResourceService resSvc)
+        public ResourceListQueryResolver(IResourceService resSvc)
         {
             _resSvc = resSvc;
         }
@@ -25,8 +25,10 @@ namespace MgGraphQL.GraphModel.Resolvers
                 resolve: context =>
                 {
                     var options = context.GetArgument<GetFolderResourcesInputModel>("options");
-                    var result = _resSvc.GetFolderResources(options);
+                    if (string.IsNullOrEmpty(options.SessionId))
+                        return AccessDeniedError();
 
+                    var result = _resSvc.GetFolderResources(options);
                     return Response(result);
                 });
         }
